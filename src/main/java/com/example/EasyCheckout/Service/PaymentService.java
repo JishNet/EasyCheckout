@@ -1,0 +1,72 @@
+package com.example.EasyCheckout.Service;
+
+import com.example.EasyCheckout.Entity.BillEntity;
+import com.example.EasyCheckout.Repositry.BillRepo;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.Utils;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PaymentService {
+
+    @Value("${razorpay.key_id}")
+    private String keyId;
+
+    @Value("${razorpay.key_secret}")
+    private String keySecret;
+
+    @Autowired
+    private BillRepo billRepo;
+
+    // 🔥 CREATE ORDER
+    public BillEntity createOrderAndSave(BillEntity bill) throws Exception {
+
+        RazorpayClient client = new RazorpayClient(keyId, keySecret);
+
+        JSONObject options = new JSONObject();
+        options.put("amount", (int)(bill.getTotalprice() * 100));
+        options.put("currency", "INR");
+        options.put("receipt", "bill_" + System.currentTimeMillis());
+
+        Order razorOrder = client.orders.create(options);
+
+        bill.setRazorpayOrderId(razorOrder.get("id"));
+        bill.setPaymentStatus("CREATED");
+
+        return billRepo.save(bill);
+    }
+
+    // 🔥 VERIFY + UPDATE
+    public String verifyAndUpdatePayment(String orderId, String paymentId, String signature) {
+
+        try {
+            String payload = orderId + "|" + paymentId;
+            String generatedSignature = Utils.getHash(payload, keySecret);
+
+            BillEntity bill = billRepo.findByRazorpayOrderId(orderId);
+
+            if (bill == null) {
+                throw new RuntimeException("Bill not found");
+            }
+
+            if (generatedSignature.equals(signature)) {
+                bill.setPaymentId(paymentId);
+                bill.setPaymentStatus("PAID");
+
+                billRepo.save(bill);
+                return "Payment Successful";
+            } else {
+                bill.setPaymentStatus("FAILED");
+                billRepo.save(bill);
+                throw new RuntimeException("Payment verification failed");
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Something went wrong");
+        }
+    }
+}
