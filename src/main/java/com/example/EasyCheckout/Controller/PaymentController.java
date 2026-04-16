@@ -38,10 +38,12 @@ public class PaymentController {
     @PostMapping("/verify")
     public String verifyPayment(@RequestBody Map<String, String> data) {
 
-        return paymentService.verifyAndUpdatePayment(
-                data.get("razorpay_order_id"),
-                data.get("razorpay_payment_id"),
-                data.get("razorpay_signature")
-        );
+        System.out.println("VERIFY REQUEST => " + data);
+
+        String orderId = data.get("razorpay_order_id");
+        String paymentId = data.get("razorpay_payment_id");
+        String signature = data.get("razorpay_signature");
+
+        return paymentService.verifyAndUpdatePayment(orderId, paymentId, signature);
     }
 }
