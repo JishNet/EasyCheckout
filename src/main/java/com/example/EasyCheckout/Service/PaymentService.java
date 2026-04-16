@@ -45,7 +45,8 @@ public class PaymentService {
         Order razorOrder = client.orders.create(options);
 
         System.out.println("ORDER CREATED => " + razorOrder);
-
+        System.out.println("KEY ID => " + keyId);
+        System.out.println("KEY SECRET => " + keySecret);
         bill.setRazorpayOrderId(razorOrder.get("id"));
         bill.setPaymentStatus("CREATED");
 
