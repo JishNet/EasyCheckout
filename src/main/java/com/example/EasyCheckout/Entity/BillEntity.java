@@ -12,6 +12,7 @@ public class BillEntity {
     @Id
     private String billId ;
     private String storeID ;
+    private String qrToken;   // 🔥 important (secure token)
 
     private Long Customerphone  ;
     private List<BillItems> Product ;

@@ -1,14 +1,12 @@
 package com.example.EasyCheckout.Service;
 import com.example.EasyCheckout.Entity.AdminEntity;
-import com.example.EasyCheckout.Entity.AdminRequest;
+import com.example.EasyCheckout.dto.AdminRequest;
 import com.example.EasyCheckout.Exception.InvalidPasswordException;
 import com.example.EasyCheckout.Exception.UserNotFoundException;
 import com.example.EasyCheckout.Exception.UseralreadyexitsException;
 import com.example.EasyCheckout.Repositry.AdminRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AdminService {

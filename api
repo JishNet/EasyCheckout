@@ -1,0 +1,7 @@
+for admin
+
+/api/admin ->
+          /signup
+          /login
+
+/api/

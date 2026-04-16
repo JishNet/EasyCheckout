@@ -1,6 +1,6 @@
 package com.example.EasyCheckout.Controller;
 import com.example.EasyCheckout.Entity.AdminEntity;
-import com.example.EasyCheckout.Entity.AdminRequest;
+import com.example.EasyCheckout.dto.AdminRequest;
 import com.example.EasyCheckout.Service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

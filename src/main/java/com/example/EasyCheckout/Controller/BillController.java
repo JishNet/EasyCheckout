@@ -1,5 +1,5 @@
 package com.example.EasyCheckout.Controller;
-import com.example.EasyCheckout.Entity.BillRequest;
+import com.example.EasyCheckout.dto.BillRequest;
 import com.example.EasyCheckout.Service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

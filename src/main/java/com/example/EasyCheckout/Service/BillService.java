@@ -1,7 +1,7 @@
 package com.example.EasyCheckout.Service;
 import com.example.EasyCheckout.Entity.BillEntity;
 import com.example.EasyCheckout.Entity.BillItems;
-import com.example.EasyCheckout.Entity.BillRequest;
+import com.example.EasyCheckout.dto.BillRequest;
 import com.example.EasyCheckout.Entity.ProductEntity;
 import com.example.EasyCheckout.Exception.InsufficientStockException;
 import com.example.EasyCheckout.Exception.ProductNotFoundException;
@@ -16,6 +16,9 @@ public class BillService {
 
     @Autowired
     private BillRepo billRepo;
+
+    @Autowired
+    private QRService qrService ;
 
     @Autowired
     private ProductRepo productRepo;
@@ -53,4 +56,18 @@ public class BillService {
 
         return billRepo.save(bill);
     }
+
+    public BillEntity markBillAsPaid(String billId) throws Exception {
+
+        BillEntity bill = billRepo.findById(billId)
+                .orElseThrow(() -> new RuntimeException("Bill not found"));
+
+        bill.setStatus("PAID");
+
+        String qrToken = qrService.generateQRToken(billId);
+        bill.setQrToken(qrToken);
+
+        return billRepo.save(bill);
+    }
+
 }
