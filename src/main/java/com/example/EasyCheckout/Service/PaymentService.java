@@ -28,9 +28,6 @@ public class PaymentService {
     // 🔥 CREATE ORDER
     public Map<String, Object> createOrderAndSave(BillEntity bill) throws Exception {
 
-        // 🔥 ADD THIS FIRST
-        System.out.println("KEY ID => " + keyId);
-        System.out.println("KEY SECRET => " + keySecret);
         System.out.println("TOTAL PRICE => " + bill.getTotalprice());
 
         RazorpayClient client = new RazorpayClient(keyId, keySecret);
@@ -40,14 +37,9 @@ public class PaymentService {
         options.put("currency", "INR");
         options.put("receipt", "bill_" + System.currentTimeMillis());
 
-        System.out.println("Creating Razorpay order...");
-
         Order razorOrder = client.orders.create(options);
 
-        System.out.println("ORDER CREATED => " + razorOrder);
-        System.out.println("KEY ID => " + keyId);
-        System.out.println("KEY SECRET => " + keySecret);
-        bill.setRazorpayOrderId(razorOrder.get("id"));
+        bill.setRazorpayOrderId(razorOrder.get("id").toString());
         bill.setPaymentStatus("CREATED");
 
         billRepo.save(bill);
@@ -58,8 +50,7 @@ public class PaymentService {
         response.put("amount", razorOrder.get("amount"));
 
         return response;
-    }    // 🔥 VERIFY + UPDATE
-    public String verifyAndUpdatePayment(String orderId, String paymentId, String signature) {
+    }    public String verifyAndUpdatePayment(String orderId, String paymentId, String signature) {
 
         try {
             String payload = orderId + "|" + paymentId;

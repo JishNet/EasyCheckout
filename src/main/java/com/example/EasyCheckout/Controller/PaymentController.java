@@ -2,6 +2,8 @@ package com.example.EasyCheckout.Controller;
 
 import com.example.EasyCheckout.Entity.BillEntity;
 import com.example.EasyCheckout.Service.PaymentService;
+import com.example.EasyCheckout.dto.BillEntityResquest;
+import com.example.EasyCheckout.dto.BillRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,18 +20,20 @@ public class PaymentController {
 
     // 🔥 CREATE BILL
     @PostMapping("/create-bill")
-    public Map<String, Object> createOrder(@RequestBody Map<String, Object> data) throws Exception {
-
-        double total = Double.parseDouble(data.get("total").toString());
+    public Map<String, Object> createOrder(@RequestBody BillEntityResquest data) throws Exception {
 
         BillEntity bill = new BillEntity();
-        bill.setTotalprice(total);
+
+        bill.setStoreID(data.getStoreID());
+        bill.setCustomerphone(data.getCustomerphone());
+        bill.setItems(data.getItems());
+
+        bill.setTotalprice(data.getTotal());
         bill.setCreatedAt(LocalDateTime.now());
         bill.setPaymentStatus("CREATED");
 
         return paymentService.createOrderAndSave(bill);
     }
-
     // 🔥 VERIFY PAYMENT
     @PostMapping("/verify")
     public String verifyPayment(@RequestBody Map<String, String> data) {
