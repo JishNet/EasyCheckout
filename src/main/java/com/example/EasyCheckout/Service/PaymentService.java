@@ -10,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.codec.digest.HmacUtils.hmacSha256;
 
 @Service
 public class PaymentService {
@@ -50,32 +53,38 @@ public class PaymentService {
         response.put("amount", razorOrder.get("amount"));
 
         return response;
-    }    public String verifyAndUpdatePayment(String orderId, String paymentId, String signature) {
+    }
+    public String verifyAndUpdatePayment(String orderId, String paymentId, String signature) {
 
         try {
-            String payload = orderId + "|" + paymentId;
-            String generatedSignature = Utils.getHash(payload, keySecret);
-
             BillEntity bill = billRepo.findByRazorpayOrderId(orderId);
 
             if (bill == null) {
-                throw new RuntimeException("Bill not found");
+                throw new RuntimeException("Bill not found for orderId: " + orderId);
             }
 
+            String payload = orderId + "|" + paymentId;
+
+            String generatedSignature = Arrays.toString(hmacSha256(payload, keySecret));
+
             if (generatedSignature.equals(signature)) {
+
                 bill.setPaymentId(paymentId);
                 bill.setPaymentStatus("PAID");
 
                 billRepo.save(bill);
                 return "Payment Successful";
+
             } else {
+
                 bill.setPaymentStatus("FAILED");
                 billRepo.save(bill);
-                throw new RuntimeException("Payment verification failed");
+
+                return "Payment verification failed";
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Something went wrong");
+            e.printStackTrace(); // IMPORTANT for Render logs
+            throw new RuntimeException("Verification error: " + e.getMessage());
         }
-    }
-}
+    }}
