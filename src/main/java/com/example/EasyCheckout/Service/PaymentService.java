@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class PaymentService {
 
@@ -23,7 +26,7 @@ public class PaymentService {
     private BillRepo billRepo;
 
     // 🔥 CREATE ORDER
-    public BillEntity createOrderAndSave(BillEntity bill) throws Exception {
+    public Map<String, Object> createOrderAndSave(BillEntity bill) throws Exception {
 
         RazorpayClient client = new RazorpayClient(keyId, keySecret);
 
@@ -37,9 +40,16 @@ public class PaymentService {
         bill.setRazorpayOrderId(razorOrder.get("id"));
         bill.setPaymentStatus("CREATED");
 
-        return billRepo.save(bill);
-    }
+        billRepo.save(bill);
 
+        // 🔥 IMPORTANT: return correct response
+        Map<String, Object> response = new HashMap<>();
+        response.put("key", keyId);
+        response.put("orderId", razorOrder.get("id"));
+        response.put("amount", razorOrder.get("amount"));
+
+        return response;
+    }
     // 🔥 VERIFY + UPDATE
     public String verifyAndUpdatePayment(String orderId, String paymentId, String signature) {
 
