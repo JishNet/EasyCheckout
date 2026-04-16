@@ -33,23 +33,23 @@ public class BillService {
 
         for (BillItems item : billRequest.getBillitem()) {
 
-            ProductEntity product = productRepo.findById(item.getProductId())
+            ProductEntity product = productRepo.findById(item.getId())
                     .orElseThrow(() -> new ProductNotFoundException(
-                            "Product not found: " + item.getProductId()
+                            "Product not found: " + item.getId()
                     ));
 
-            if (product.getStock() < item.getItemQuantity()) {
+            if (product.getStock() < item.getQuantity()) {
                 throw new InsufficientStockException("Stock is Insufficient for "+product.getProductName());
             }
 
-            total += product.getPrice() * item.getItemQuantity();
+            total += product.getPrice() * item.getQuantity();
         }
 
         BillEntity bill = new BillEntity();
 
         bill.setStoreID(billRequest.getStoreID());
         bill.setCustomerphone(billRequest.getUserphone());
-        bill.setProduct(billRequest.getBillitem());
+        bill.setItems(billRequest.getBillitem());
         bill.setStatus("CREATED");
         bill.setTotalprice(total);
         bill.setCreatedAt(LocalDateTime.now());
