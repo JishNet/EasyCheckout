@@ -2,7 +2,6 @@ package com.example.EasyCheckout.Service;
 
 import com.example.EasyCheckout.Entity.BillEntity;
 import com.example.EasyCheckout.Repositry.BillRepo;
-import com.example.EasyCheckout.Repositry.ProductRepo;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
