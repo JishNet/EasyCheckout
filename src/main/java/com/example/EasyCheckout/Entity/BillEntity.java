@@ -14,8 +14,8 @@ public class BillEntity {
     private String storeID ;
     private String qrToken;   // 🔥 important (secure token)
 
-    private Long Customerphone  ;
-    private List<BillItems> Product ;
+    private Long customerphone  ;
+    private List<BillItems> items ;
     private double totalprice ;
     private String status  ;
     private LocalDateTime createdAt ;
