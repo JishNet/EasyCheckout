@@ -1,7 +1,26 @@
-for admin
-
+base uri - https://easycheckout-xs9c.onrender.com
 /api/admin ->
           /signup
           /login
 
-/api/
+/api/bill ->
+          /createbill
+
+
+/api/payment ->
+           /create-bill
+           /verify
+
+/api/product - >
+           /addproduct
+           /{id}/qr
+           /scan/{id}
+
+/qr         - >
+           /{billId}
+           /verify
+
+/api/store  ->
+           /deletestore/{storeID}
+           /addstore
+           /api/store

@@ -36,9 +36,7 @@ public class QRService {
 
         return outputStream.toByteArray();
     }
-
-
-
+    
     public boolean verifyQR(String qrData) {
 
         String[] parts = qrData.split("\\|");

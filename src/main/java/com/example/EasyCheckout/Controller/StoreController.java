@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/api/store")
 public class StoreController {
@@ -29,7 +31,7 @@ public class StoreController {
 
     }
 
-    @GetMapping("/fetchstore")
+    @GetMapping("/addstore")
     public ResponseEntity<?> fetchstore() {
         try {
             return ResponseEntity
