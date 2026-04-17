@@ -60,7 +60,9 @@ public class PaymentService {
     // VERIFY PAYMENT
     // ==============================
     public String verifyAndUpdatePayment(String orderId, String paymentId, String signature) {
-
+        if (orderId == null || orderId.isEmpty()) {
+            throw new RuntimeException("OrderId is null from frontend");
+        }
         try {
 
             BillEntity bill = billRepo.findByRazorpayOrderId(orderId);
